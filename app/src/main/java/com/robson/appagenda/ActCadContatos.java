@@ -2,6 +2,8 @@ package com.robson.appagenda;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -91,5 +93,26 @@ public class ActCadContatos extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Outros");
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_act_cad_contatos, menu);
+        return true;
+    }
+    // Criação das ações de menu da tela de cadastro de contato responsavel por controlar qual menu foi selecionado
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //Opções de ação do menu na tela de cadastro de contato
+        switch (item.getItemId()) {
+            case R.id.mni_acao1:
+
+                break;
+            case R.id.mni_acao2:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
