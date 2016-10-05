@@ -31,24 +31,23 @@ public class ActCadContatos extends AppCompatActivity {
     private ArrayAdapter<String> adpTipoDatasEspeciais;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_cad_contatos);
 
         //Iniciando os campos da agenda
-        edtNome           = (EditText) findViewById(R.id.edtNome);
-        edtTelefone       = (EditText) findViewById(R.id.edtTelefone);
-        edtEmail          = (EditText) findViewById(R.id.edtEmail);
-        edtEndereco       = (EditText) findViewById(R.id.edtEndereco);
+        edtNome = (EditText) findViewById(R.id.edtNome);
+        edtTelefone = (EditText) findViewById(R.id.edtTelefone);
+        edtEmail = (EditText) findViewById(R.id.edtEmail);
+        edtEndereco = (EditText) findViewById(R.id.edtEndereco);
         edtDatasEspeciais = (EditText) findViewById(R.id.edtDatasEspeciais);
-        edtGrupos         = (EditText) findViewById(R.id.edtGrupos);
+        edtGrupos = (EditText) findViewById(R.id.edtGrupos);
 
         //Iniciando as opções de cada campo da agenda
-        spnTipoTelefone      = (Spinner) findViewById(R.id.spnTipoTelefone);
-        spnTipoEmail         = (Spinner) findViewById(R.id.spntTipEmail);
-        spnTipoEndereco      = (Spinner) findViewById(R.id.spnTipoEndereco);
+        spnTipoTelefone = (Spinner) findViewById(R.id.spnTipoTelefone);
+        spnTipoEmail = (Spinner) findViewById(R.id.spntTipEmail);
+        spnTipoEndereco = (Spinner) findViewById(R.id.spnTipoEndereco);
         spnTipoDataEspeciais = (Spinner) findViewById(R.id.spnTipoDatasEspeciais);
 
         //Iniciando os ArrayAdapter<>
@@ -101,6 +100,7 @@ public class ActCadContatos extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_act_cad_contatos, menu);
         return true;
     }
+
     // Criação das ações de menu da tela de cadastro de contato responsavel por controlar qual menu foi selecionado
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
