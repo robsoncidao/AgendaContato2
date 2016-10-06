@@ -1,5 +1,8 @@
 package com.robson.appagenda;
 
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +10,12 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.robson.appagenda.database.DataBase;
+import com.robson.appagenda.dominio.RepositorioContato;
+import com.robson.appagenda.dominio.entidades.Contato;
+
+import java.util.Date;
 
 public class ActCadContatos extends AppCompatActivity {
 
@@ -29,6 +38,12 @@ public class ActCadContatos extends AppCompatActivity {
     private ArrayAdapter<String> adpTipoTelefone;
     private ArrayAdapter<String> adpTipoEndereco;
     private ArrayAdapter<String> adpTipoDatasEspeciais;
+
+    //Variaveis de conexão com o banco
+    private DataBase dataBase;
+    private SQLiteDatabase conn;
+    private RepositorioContato repositorioContato;
+    private Contato contato;
 
 
     @Override
@@ -91,7 +106,21 @@ public class ActCadContatos extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Data comemorativa");
         adpTipoDatasEspeciais.add("Outros");
 
+        try {
+            dataBase = new DataBase(this);
 
+            //criação da leitura, consulta e escrita do banco de dados
+            conn = dataBase.getWritableDatabase();
+            repositorioContato = new RepositorioContato(conn);
+
+        } catch (SQLException ex) {
+            //SQLException importante usar o pacote (import android.database.SQLException;) android
+            // pois o pacote java não tem suporte.
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao criar o banco de dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 
     @Override
@@ -108,11 +137,44 @@ public class ActCadContatos extends AppCompatActivity {
         //Opções de ação do menu na tela de cadastro de contato
         switch (item.getItemId()) {
             case R.id.mni_acao1:
-
+                    if (contato == null){
+                        inserirContato();
+                    }
+                finish();
                 break;
             case R.id.mni_acao2:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private  void inserirContato(){
+
+        try {
+            contato = new Contato();
+
+            contato.setNome(edtNome.getText().toString());
+            contato.setTelefone(edtTelefone.getText().toString());
+            contato.setEmail(edtEmail.getText().toString());
+            contato.setEndereco(edtEndereco.getText().toString());
+            Date date = new Date();
+            contato.setDatasEspeciais(date);
+            contato.setGrupos(edtGrupos.getText().toString());
+
+            contato.setTipoTelefone("");
+            contato.setTipoEmail("");
+            contato.setTipoEndereco("");
+            contato.setTipoDatasEspeciais("");
+
+
+            repositorioContato.inserir(contato);
+        }catch (Exception ex){
+            //SQLException importante usar o pacote (import android.database.SQLException;) android
+            // pois o pacote java não tem suporte.
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 }

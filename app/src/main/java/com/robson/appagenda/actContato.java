@@ -13,18 +13,19 @@ import android.widget.ListView;
 
 import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
+import com.robson.appagenda.dominio.entidades.Contato;
 
 public class actContato extends AppCompatActivity {
 
     private EditText edtPesquisa;
-    private ListView lstContatos;
+    private ListView ListViewContatos;
 
     private DataBase dataBase;
 
     //variavél de conexão com o banco
     private SQLiteDatabase conn;
 
-    private ArrayAdapter<String> adaptadorContatos;
+    private ArrayAdapter<Contato> adaptadorContatos;
 
 
     private RepositorioContato repositorioContato;
@@ -35,23 +36,27 @@ public class actContato extends AppCompatActivity {
         setContentView(R.layout.act_contato);
 
         edtPesquisa = (EditText) findViewById(R.id.edtPesquisa);
-        lstContatos = (ListView) findViewById(R.id.lstContatos);
+        ListViewContatos = (ListView) findViewById(R.id.lstContatos);
 
 
         try {
             dataBase = new DataBase(this);
 
             //criação da leitura, consulta e escrita do banco de dados
-            conn = dataBase.getReadableDatabase();
+            conn = dataBase.getWritableDatabase();
 
             repositorioContato = new RepositorioContato(conn);
 
+            /**
+             * repositorioContato.testeInserirContato();
+             * teste de inserção
+             */
+
+
             adaptadorContatos = repositorioContato.buscaContatos(this);
 
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Conexão criada com sucesso");
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            //exibindo os contatos na listView associando o arrayAdapter(adaptadorContatos) no listView (listViewContatos)
+            ListViewContatos.setAdapter(adaptadorContatos);
 
 
         } catch (SQLException ex) {
@@ -68,7 +73,21 @@ public class actContato extends AppCompatActivity {
     public void botaoAdicionar(View view) {
 
         Intent botaoAdicionar = new Intent(this, ActCadContatos.class);
-        startActivity(botaoAdicionar);
+
+        //o número 0(zero) cria uma referência à activity ActCadContatos.
+        //startActivityForResult sempre que usado é necessário usar o método onActivityResult
+        startActivityForResult(botaoAdicionar, 0);
     }
 
+
+    //Método atualiza a listView sempre que a listView tiver que exibir um resultado é importante usar o método onActivityResult
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //Adapter (adaptadorContatos) responsavel por receber o objeto contato cadastrado no banco.
+        adaptadorContatos = repositorioContato.buscaContatos(this);
+
+        //exibindo os contatos na listView associando o arrayAdapter(adaptadorContatos) no listView (listViewContatos)
+        ListViewContatos.setAdapter(adaptadorContatos);
+    }
 }
