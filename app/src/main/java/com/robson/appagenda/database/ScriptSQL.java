@@ -17,7 +17,7 @@ public class ScriptSQL {
         //Utilizado para unir uma String grande.
         StringBuilder sqlBuilder  = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS contato( ");
-        sqlBuilder.append("_id INTEGER NOT NULL ");
+        sqlBuilder.append("_id                 INTEGER NOT NULL ");
         sqlBuilder.append("PRIMARY Key AUTOINCREMENT, ");
         sqlBuilder.append("nome                VARCHAR(50),");
         sqlBuilder.append("telefone            VARCHAR(1), ");

@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,7 +16,7 @@ import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
 import com.robson.appagenda.dominio.entidades.Contato;
 
-public class actContato extends AppCompatActivity {
+public class actContato extends AppCompatActivity  implements View.OnClickListener, AdapterView.OnItemClickListener{
 
     private EditText edtPesquisa;
     private ListView ListViewContatos;
@@ -89,5 +90,23 @@ public class actContato extends AppCompatActivity {
 
         //exibindo os contatos na listView associando o arrayAdapter(adaptadorContatos) no listView (listViewContatos)
         ListViewContatos.setAdapter(adaptadorContatos);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long l) {
+
+        Contato contato  = adaptadorContatos.getItem(posicao);
+
+        Intent it = new Intent(this, ActCadContatos.class);
+
+        it.putExtra("contato", contato);
+        startActivityForResult(it, 0);
+
+
     }
 }

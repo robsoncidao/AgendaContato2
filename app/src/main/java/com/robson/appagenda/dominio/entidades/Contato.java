@@ -1,11 +1,33 @@
 package com.robson.appagenda.dominio.entidades;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by CIDAO on 05/10/2016.
  */
-public class Contato {
+
+
+
+public class Contato implements Serializable{
+
+    //constantes com o nome das colunas da tabela contato para facilitar na busca dos dados la no método buscarDados do arquivo RespositorioContato
+    // os nomes dentro da " "(aspas) tem que ser igual que está na criação da tabela.
+    public static String ID = "_id";
+    public static String NOME = "nome";
+    public static String TELEFONE = "telefone";
+    public static String TIPOTELEFONE = "tipoTelefone";
+    public static String EMAIL = "email";
+    public static String TIPOEMAIL = "tipoEmail";
+    public static String ENDERECO = "endereco";
+    public static String TIPOENDERECO = "tipoEndereco";
+    public static String DATASESPECIAIS = "datasEspeciais";
+    public static String TIPODATASESPECIAIS = "tiposDatasEspeciais";
+    public static String GRUPOS = "grupos";
+
+
+
+
     private long id;
     private String nome;
     private String telefone;
@@ -20,6 +42,7 @@ public class Contato {
 
 
     public Contato (){
+        id = 0;
 
     }
 

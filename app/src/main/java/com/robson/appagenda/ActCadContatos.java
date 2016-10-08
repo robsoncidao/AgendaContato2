@@ -1,5 +1,6 @@
 package com.robson.appagenda;
 
+import android.app.DatePickerDialog;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
@@ -7,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -15,6 +18,8 @@ import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
 import com.robson.appagenda.dominio.entidades.Contato;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ActCadContatos extends AppCompatActivity {
@@ -106,6 +111,22 @@ public class ActCadContatos extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Data comemorativa");
         adpTipoDatasEspeciais.add("Outros");
 
+        ExibeDataListener listener = new ExibeDataListener();
+
+        //Opção para exibir o calendário utilizando a classe interna ExibeDataListener
+        edtDatasEspeciais.setOnClickListener(listener);
+        //Tratando o focu do campo datas especiais
+        edtDatasEspeciais.setOnFocusChangeListener(listener);
+
+        //Recuperando dados da Intent são os parâmetros passado do actContato
+        Bundle bundle = getIntent().getExtras();
+        if ((bundle != null) && (bundle.containsKey("contato"))){
+            contato = (Contato) bundle.getSerializable("contato");
+        }else {
+            contato = new Contato();
+        }
+
+        contato = new Contato();
         try {
             dataBase = new DataBase(this);
 
@@ -121,6 +142,7 @@ public class ActCadContatos extends AppCompatActivity {
             dlg.setNeutralButton("OK", null);
             dlg.show();
         }
+
     }
 
     @Override
@@ -137,7 +159,7 @@ public class ActCadContatos extends AppCompatActivity {
         //Opções de ação do menu na tela de cadastro de contato
         switch (item.getItemId()) {
             case R.id.mni_acao1:
-                    if (contato == null){
+                    if (contato.getId() == 0){
                         inserirContato();
                     }
                 finish();
@@ -148,23 +170,44 @@ public class ActCadContatos extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void preencheDados(){
+
+        edtNome.setText(contato.getNome());
+        edtTelefone.setText(contato.getTelefone());
+        //pegando o item escolhido pelo usuario no spnner cadastrado no banco como uma String é usado Integer.parseInt pra converte em inteiro
+        spnTipoTelefone.setSelection(Integer.parseInt(contato.getTipoTelefone()));
+        edtEmail.setText(contato.getEmail());
+        spnTipoEmail.setSelection(Integer.parseInt(contato.getTipoEmail()));
+        edtEndereco.setText(contato.getEndereco());
+        spnTipoEndereco.setSelection(Integer.parseInt(contato.getTipoEndereco()));
+
+        //Formatação de data
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+        String dataFormatada = format.format(contato.getDatasEspeciais());
+
+        edtDatasEspeciais.setText(dataFormatada);
+        spnTipoDataEspeciais.setSelection(Integer.parseInt(contato.getTipoDatasEspeciais()));
+        edtGrupos.setText(contato.getGrupos());
+
+    }
+
     private  void inserirContato(){
 
         try {
-            contato = new Contato();
+
 
             contato.setNome(edtNome.getText().toString());
             contato.setTelefone(edtTelefone.getText().toString());
             contato.setEmail(edtEmail.getText().toString());
             contato.setEndereco(edtEndereco.getText().toString());
-            Date date = new Date();
-            contato.setDatasEspeciais(date);
+
             contato.setGrupos(edtGrupos.getText().toString());
 
-            contato.setTipoTelefone("");
-            contato.setTipoEmail("");
-            contato.setTipoEndereco("");
-            contato.setTipoDatasEspeciais("");
+            //pegando o item selecionado no spnner que retorna um inteiro é utilizado o String.valueOf para converter em String
+            contato.setTipoTelefone(String.valueOf(spnTipoTelefone.getSelectedItemPosition()));
+            contato.setTipoEmail(String.valueOf(spnTipoEmail.getSelectedItemPosition()));
+            contato.setTipoEndereco(String.valueOf(spnTipoEndereco.getSelectedItemPosition()));
+            contato.setTipoDatasEspeciais(String.valueOf(spnTipoDataEspeciais.getSelectedItemPosition()));
 
 
             repositorioContato.inserir(contato);
@@ -175,6 +218,54 @@ public class ActCadContatos extends AppCompatActivity {
             dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
             dlg.setNeutralButton("OK", null);
             dlg.show();
+        }
+    }
+
+    //Método para criar o  calendário para exibição de data qndo o usuário escolher a opção dasta especiais.
+    private void exibeData(){
+
+        Calendar calendar = Calendar.getInstance();
+        int ano = calendar.get(calendar.YEAR);
+        int mes = calendar.get(calendar.MONTH);
+        int dia = calendar.get(calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dlg = new DatePickerDialog(this, new SelecionaDataListener(), ano, mes, dia);
+        dlg.show();
+    }
+
+    //classe interna responsável por determinar o evento de clique do campo datas especiais.
+    private class ExibeDataListener implements View.OnClickListener, View.OnFocusChangeListener{
+
+        @Override
+        public void onClick(View view) {
+            exibeData();
+        }
+
+        @Override
+        public void onFocusChange(View view, boolean b) {
+            if (hasWindowFocus())
+            exibeData();
+        }
+    }
+
+    //Classe para exibir a data no  campo após o usuário selecionar uma data
+    private class SelecionaDataListener implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int ano, int mes, int dia) {
+
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.set(ano, mes, dia);
+
+            Date data = calendar.getTime();
+
+            //Formatando a data os formatos short exibe a data 06/11/1987 já o formato Medium exibe a data 06 de novembro de 1987
+            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+            String datasEspeciais = format.format(data);
+
+            edtDatasEspeciais.setText(datasEspeciais);
+            contato.setDatasEspeciais(data);
         }
     }
 }
