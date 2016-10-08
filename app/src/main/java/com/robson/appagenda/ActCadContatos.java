@@ -120,8 +120,11 @@ public class ActCadContatos extends AppCompatActivity {
 
         //Recuperando dados da Intent são os parâmetros passado do actContato
         Bundle bundle = getIntent().getExtras();
+
         if ((bundle != null) && (bundle.containsKey("contato"))){
             contato = (Contato) bundle.getSerializable("contato");
+            //Método responsável por preencher os dados.
+            preencheDados();
         }else {
             contato = new Contato();
         }
@@ -158,11 +161,12 @@ public class ActCadContatos extends AppCompatActivity {
 
         //Opções de ação do menu na tela de cadastro de contato
         switch (item.getItemId()) {
+
             case R.id.mni_acao1:
-                    if (contato.getId() == 0){
-                        inserirContato();
-                    }
-                finish();
+
+                salvarContato();
+
+
                 break;
             case R.id.mni_acao2:
                 break;
@@ -191,7 +195,7 @@ public class ActCadContatos extends AppCompatActivity {
 
     }
 
-    private  void inserirContato(){
+    private  void salvarContato(){
 
         try {
 
@@ -209,8 +213,13 @@ public class ActCadContatos extends AppCompatActivity {
             contato.setTipoEndereco(String.valueOf(spnTipoEndereco.getSelectedItemPosition()));
             contato.setTipoDatasEspeciais(String.valueOf(spnTipoDataEspeciais.getSelectedItemPosition()));
 
-
-            repositorioContato.inserir(contato);
+            //Validação se o usuário está salvando um contato ou alterando
+            if(contato.getId() == 0) {
+                repositorioContato.inserirContato(contato);
+            }
+            else {
+                repositorioContato.alterarContato(contato);
+            }
         }catch (Exception ex){
             //SQLException importante usar o pacote (import android.database.SQLException;) android
             // pois o pacote java não tem suporte.

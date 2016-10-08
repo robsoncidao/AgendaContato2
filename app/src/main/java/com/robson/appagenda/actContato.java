@@ -39,6 +39,9 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
         edtPesquisa = (EditText) findViewById(R.id.edtPesquisa);
         ListViewContatos = (ListView) findViewById(R.id.lstContatos);
 
+        //Associando o evento de clique da ListView usando o método setOnItemClickListener() configurado no public void onItemClick
+        ListViewContatos.setOnItemClickListener(this);
+
 
         try {
             dataBase = new DataBase(this);
@@ -47,11 +50,6 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
             conn = dataBase.getWritableDatabase();
 
             repositorioContato = new RepositorioContato(conn);
-
-            /**
-             * repositorioContato.testeInserirContato();
-             * teste de inserção
-             */
 
 
             adaptadorContatos = repositorioContato.buscaContatos(this);

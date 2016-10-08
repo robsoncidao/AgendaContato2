@@ -17,11 +17,11 @@ import java.util.Date;
 public class RepositorioContato {
     private SQLiteDatabase conn;
 
-    public RepositorioContato(SQLiteDatabase conn){
+    public RepositorioContato(SQLiteDatabase conn) {
         this.conn = conn;
     }
 
-    public void inserir(Contato contato){
+    private ContentValues preencheContentValues(Contato contato) {
         ContentValues values = new ContentValues();
         //campos da tabela
         values.put("nome", contato.getNome());
@@ -30,30 +30,33 @@ public class RepositorioContato {
         values.put("email", contato.getEmail());
         values.put("tipoEmail", contato.getTipoEmail());
         values.put("endereco", contato.getEndereco());
-        values.put("tipoEndereco",contato.getTipoEndereco());
+        values.put("tipoEndereco", contato.getTipoEndereco());
         values.put("datasEspeciais", contato.getDatasEspeciais().getTime());
-        values.put("tiposDatasEspeciais",contato.getTipoDatasEspeciais());
+        values.put("tiposDatasEspeciais", contato.getTipoDatasEspeciais());
         values.put("grupos", contato.getGrupos());
+        return values;
+    }
+
+    public void inserirContato(Contato contato) {
+        ContentValues values = preencheContentValues(contato);
         //inserindo os dados na tabela contato
         conn.insertOrThrow("contato", null, values);
     }
 
- /**
-    public void testeInserirContato(){
+    public void alterarContato(Contato contato) {
 
-        for (int i = 0; i < 5; i++) {
-            ContentValues values = new ContentValues();
-            values.put("telefone", "3311-9908");
-            conn.insertOrThrow("contato", null, values);
-        }
-
-    } **/
+        ContentValues values = preencheContentValues(contato);
+        //alterando os dados na tabela contato
+        // caso tenha mais algum parâmetro é usar exempo "nome = ? AND telefone = ?" nome e telefone são campos da tabela.
+        // o último parâmetro do update só aceita String.
+        conn.update("contato", values, "_id = ?", new String[]{String.valueOf(contato.getId())});
+    }
 
     public ArrayAdapter<Contato> buscaContatos(Context context) {
 
-        ArrayAdapter<Contato> adaptadorContatos = new ArrayAdapter<Contato>( context, android.R.layout.simple_list_item_1 );
+        ArrayAdapter<Contato> adaptadorContatos = new ArrayAdapter<Contato>(context, android.R.layout.simple_list_item_1);
 
-        Cursor cursor = conn.query( "CONTATO", null, null, null, null, null, null );
+        Cursor cursor = conn.query("CONTATO", null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -77,9 +80,11 @@ public class RepositorioContato {
                 contato.setGrupos(cursor.getString(cursor.getColumnIndex(contato.GRUPOS)));
 
                 //adicionando o objeto contato ao adapter
-                adaptadorContatos.add( contato );
+                adaptadorContatos.add(contato);
             } while (cursor.moveToNext());
         }
         return adaptadorContatos;
     }
+
+
 }
