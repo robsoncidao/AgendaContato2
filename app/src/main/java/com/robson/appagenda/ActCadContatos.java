@@ -151,6 +151,12 @@ public class ActCadContatos extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_act_cad_contatos, menu);
+
+
+        //Configuração do menu excluir
+        if(contato.getId() != 0) {
+            menu.getItem(1).setVisible(true);
+        }
         return true;
     }
 
@@ -161,16 +167,28 @@ public class ActCadContatos extends AppCompatActivity {
         //Opções de ação do menu na tela de cadastro de contato
         switch (item.getItemId()) {
 
-            case R.id.mni_acao1:
+            case R.id.menu_salvar_alterar:
 
                 salvarContato();
                 finish();
                 break;
 
-            case R.id.mni_acao2:
+            case R.id.menu_excluir:
+                excluirContato();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void excluirContato(){
+        try{
+            repositorioContato.excluir(contato.getId());
+
+        }catch (Exception ex){
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao excluir os dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 
     private void preencheDados(){

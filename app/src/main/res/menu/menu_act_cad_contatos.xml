@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/mni_acao1"
+        android:id="@+id/menu_salvar_alterar"
         android:title="@string/lbl_salvar"
         android:orderInCategory="100"
         app:showAsAction="never"
         />
     <item
-        android:id="@+id/mni_acao2"
+        android:id="@+id/menu_excluir"
         android:title="@string/lbl_excluir"
         android:orderInCategory="100"
         app:showAsAction="never"
