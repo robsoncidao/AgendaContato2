@@ -123,13 +123,12 @@ public class ActCadContatos extends AppCompatActivity {
 
         if ((bundle != null) && (bundle.containsKey("contato"))){
             contato = (Contato) bundle.getSerializable("contato");
-            //Método responsável por preencher os dados.
+            //Método responsável por preencher os dados.Quando clica em algum contato na lista
             preencheDados();
         }else {
             contato = new Contato();
         }
 
-        contato = new Contato();
         try {
             dataBase = new DataBase(this);
 
@@ -165,9 +164,9 @@ public class ActCadContatos extends AppCompatActivity {
             case R.id.mni_acao1:
 
                 salvarContato();
-
-
+                finish();
                 break;
+
             case R.id.mni_acao2:
                 break;
         }
@@ -185,11 +184,11 @@ public class ActCadContatos extends AppCompatActivity {
         edtEndereco.setText(contato.getEndereco());
         spnTipoEndereco.setSelection(Integer.parseInt(contato.getTipoEndereco()));
 
-        //Formatação de data
+        ////Formatando a data os formatos short exibe a data 06/11/1987 já o formato Medium exibe a data 06 de novembro de 1987
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
         String dataFormatada = format.format(contato.getDatasEspeciais());
-
         edtDatasEspeciais.setText(dataFormatada);
+
         spnTipoDataEspeciais.setSelection(Integer.parseInt(contato.getTipoDatasEspeciais()));
         edtGrupos.setText(contato.getGrupos());
 
@@ -271,9 +270,9 @@ public class ActCadContatos extends AppCompatActivity {
 
             //Formatando a data os formatos short exibe a data 06/11/1987 já o formato Medium exibe a data 06 de novembro de 1987
             DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-            String datasEspeciais = format.format(data);
+            String datasFormatada = format.format(data);
 
-            edtDatasEspeciais.setText(datasEspeciais);
+           edtDatasEspeciais.setText(datasFormatada);
             contato.setDatasEspeciais(data);
         }
     }

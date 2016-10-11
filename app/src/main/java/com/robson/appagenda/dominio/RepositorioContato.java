@@ -52,11 +52,15 @@ public class RepositorioContato {
         conn.update("contato", values, "_id = ?", new String[]{String.valueOf(contato.getId())});
     }
 
+    public void excluir (long id){
+        conn.delete("contato", "_id = ?", new String[]{String.valueOf(id)});
+    }
+
     public ArrayAdapter<Contato> buscaContatos(Context context) {
 
         ArrayAdapter<Contato> adaptadorContatos = new ArrayAdapter<Contato>(context, android.R.layout.simple_list_item_1);
 
-        Cursor cursor = conn.query("CONTATO", null, null, null, null, null, null);
+        Cursor cursor = conn.query("contato", null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
