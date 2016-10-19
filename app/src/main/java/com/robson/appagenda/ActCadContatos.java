@@ -14,9 +14,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.robson.appagenda.app.MessagemBox;
 import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
 import com.robson.appagenda.dominio.entidades.Contato;
+import com.robson.appagenda.util.DateUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -121,8 +123,8 @@ public class ActCadContatos extends AppCompatActivity {
         //Recuperando dados da Intent são os parâmetros passado do actContato
         Bundle bundle = getIntent().getExtras();
 
-        if ((bundle != null) && (bundle.containsKey("contato"))){
-            contato = (Contato) bundle.getSerializable("contato");
+        if ((bundle != null) && (bundle.containsKey(actContato.PARAMETRO_CONTATO))){
+            contato = (Contato) bundle.getSerializable(actContato.PARAMETRO_CONTATO);
             //Método responsável por preencher os dados.Quando clica em algum contato na lista
             preencheDados();
         }else {
@@ -139,10 +141,7 @@ public class ActCadContatos extends AppCompatActivity {
         } catch (SQLException ex) {
             //SQLException importante usar o pacote (import android.database.SQLException;) android
             // pois o pacote java não tem suporte.
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao criar o banco de dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessagemBox.show(this, "Erro", "Erro ao criar o banco: " + ex.getMessage());
         }
 
     }
@@ -184,10 +183,7 @@ public class ActCadContatos extends AppCompatActivity {
             repositorioContato.excluir(contato.getId());
 
         }catch (Exception ex){
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao excluir os dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessagemBox.show(this, "Erro", "Erro ao excluir os dados: " + ex.getMessage());
         }
     }
 
@@ -240,10 +236,7 @@ public class ActCadContatos extends AppCompatActivity {
         }catch (Exception ex){
             //SQLException importante usar o pacote (import android.database.SQLException;) android
             // pois o pacote java não tem suporte.
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessagemBox.show(this, "Erro", "Erro ao salvar os dados: " + ex.getMessage());
         }
     }
 
@@ -280,15 +273,8 @@ public class ActCadContatos extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int ano, int mes, int dia) {
 
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.set(ano, mes, dia);
-
-            Date data = calendar.getTime();
-
-            //Formatando a data os formatos short exibe a data 06/11/1987 já o formato Medium exibe a data 06 de novembro de 1987
-            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-            String datasFormatada = format.format(data);
+            String datasFormatada = DateUtils.dateToString(ano, mes, dia);
+            Date data = DateUtils.getDate(ano, mes, dia);
 
            edtDatasEspeciais.setText(datasFormatada);
             contato.setDatasEspeciais(data);

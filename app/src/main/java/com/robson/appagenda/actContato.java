@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.robson.appagenda.app.MessagemBox;
 import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
 import com.robson.appagenda.dominio.entidades.Contato;
@@ -30,6 +31,9 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
 
     private RepositorioContato repositorioContato;
+
+
+    public static final String PARAMETRO_CONTATO = "contato";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +65,7 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
         } catch (SQLException ex) {
             //SQLException importante usar o pacote (import android.database.SQLException;) android
             // pois o pacote java não tem suporte.
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao criar o banco de dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessagemBox.show(this, "Erro", "Erro ao criar o banco: " + ex.getMessage());
         }
 
     }
@@ -102,7 +103,7 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
         Intent it = new Intent(this, ActCadContatos.class);
 
-        it.putExtra("contato", contato);
+        it.putExtra(PARAMETRO_CONTATO, contato);
         startActivityForResult(it, 0);
 
 
