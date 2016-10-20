@@ -24,23 +24,25 @@ public class RepositorioContato {
     private ContentValues preencheContentValues(Contato contato) {
         ContentValues values = new ContentValues();
         //campos da tabela
-        values.put("nome", contato.getNome());
-        values.put("telefone", contato.getTelefone());
-        values.put("tipoTelefone", contato.getTipoTelefone());
-        values.put("email", contato.getEmail());
-        values.put("tipoEmail", contato.getTipoEmail());
-        values.put("endereco", contato.getEndereco());
-        values.put("tipoEndereco", contato.getTipoEndereco());
-        values.put("datasEspeciais", contato.getDatasEspeciais().getTime());
-        values.put("tiposDatasEspeciais", contato.getTipoDatasEspeciais());
-        values.put("grupos", contato.getGrupos());
+        values.put(Contato.NOME, contato.getNome());
+        values.put(contato.TELEFONE, contato.getTelefone());
+        values.put(contato.TIPOTELEFONE, contato.getTipoTelefone());
+        values.put(contato.EMAIL, contato.getEmail());
+        values.put(contato.TIPOEMAIL, contato.getTipoEmail());
+        values.put(contato.ENDERECO, contato.getEndereco());
+        values.put(contato.TIPOENDERECO, contato.getTipoEndereco());
+        values.put(contato.DATASESPECIAIS, contato.getDatasEspeciais().getTime());
+        values.put(contato.TIPODATASESPECIAIS, contato.getTipoDatasEspeciais());
+        values.put(contato.GRUPOS, contato.getGrupos());
         return values;
     }
 
     public void inserirContato(Contato contato) {
         ContentValues values = preencheContentValues(contato);
-        //inserindo os dados na tabela contato
-        conn.insertOrThrow("contato", null, values);
+        //inserindo os dados na tabela contato. Contato.TABELACONTATO é uma constante com o nome da tabela contato criada na base de dados
+        // é mesma coisa se estiver em "contato". se que por uma questão de repetição foi criada uma constante com
+        // o nome da tabela na classe contato.
+        conn.insertOrThrow(Contato.TABELACONTATO, null, values);
     }
 
     public void alterarContato(Contato contato) {
@@ -49,18 +51,18 @@ public class RepositorioContato {
         //alterando os dados na tabela contato
         // caso tenha mais algum parâmetro é usar exempo "nome = ? AND telefone = ?" nome e telefone são campos da tabela.
         // o último parâmetro do update só aceita String.
-        conn.update("contato", values, "_id = ?", new String[]{String.valueOf(contato.getId())});
+        conn.update(Contato.TABELACONTATO, values, "_id = ?", new String[]{String.valueOf(contato.getId())});
     }
 
     public void excluir (long id){
-        conn.delete("contato", "_id = ?", new String[]{String.valueOf(id)});
+        conn.delete(Contato.TABELACONTATO, "_id = ?", new String[]{String.valueOf(id)});
     }
 
     public ArrayAdapter<Contato> buscaContatos(Context context) {
 
         ArrayAdapter<Contato> adaptadorContatos = new ArrayAdapter<Contato>(context, android.R.layout.simple_list_item_1);
 
-        Cursor cursor = conn.query("contato", null, null, null, null, null, null);
+        Cursor cursor = conn.query(Contato.TABELACONTATO, null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

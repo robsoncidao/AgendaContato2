@@ -13,6 +13,8 @@ public class Contato implements Serializable{
 
     //constantes com o nome das colunas da tabela contato para facilitar na busca dos dados la no método buscarDados do arquivo RespositorioContato
     // os nomes dentro da " "(aspas) tem que ser igual que está na criação da tabela.
+
+    public static String TABELACONTATO = "contato";
     public static String ID = "_id";
     public static String NOME = "nome";
     public static String TELEFONE = "telefone";

@@ -11,7 +11,7 @@ public class ViewHelper {
 
     public static ArrayAdapter<String> criadorArrayAdapter(Context context, Spinner spinner){
         //Iniciando os ArrayAdapter<>
-        ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //Associando o ArrayAdapter ao Spinner

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.robson.appagenda.app.MessagemBox;
+import com.robson.appagenda.app.ViewHelper;
 import com.robson.appagenda.database.DataBase;
 import com.robson.appagenda.dominio.RepositorioContato;
 import com.robson.appagenda.dominio.entidades.Contato;
@@ -72,6 +73,7 @@ public class ActCadContatos extends AppCompatActivity {
         spnTipoEndereco = (Spinner) findViewById(R.id.spnTipoEndereco);
         spnTipoDataEspeciais = (Spinner) findViewById(R.id.spnTipoDatasEspeciais);
 
+        /**
         //Iniciando os ArrayAdapter<>
         adpTipoEmail = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adpTipoEmail.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -90,6 +92,14 @@ public class ActCadContatos extends AppCompatActivity {
         spnTipoTelefone.setAdapter(adpTipoTelefone);
         spnTipoEndereco.setAdapter(adpTipoEndereco);
         spnTipoDataEspeciais.setAdapter(adpTipoDatasEspeciais);
+
+         */
+
+        //Utilizando a classe ViewHelper para criação de dos ArrayAdapter
+        adpTipoEmail          = ViewHelper.criadorArrayAdapter(this, spnTipoEmail);//adp - ArrayAdapter.
+        adpTipoTelefone       = ViewHelper.criadorArrayAdapter(this, spnTipoTelefone);
+        adpTipoEndereco       = ViewHelper.criadorArrayAdapter(this, spnTipoEndereco);
+        adpTipoDatasEspeciais = ViewHelper.criadorArrayAdapter(this, spnTipoDataEspeciais);
 
         //Adicionando os itens de cada Spnnier (menu de opções que oplicativo oferece na hora de cadastrar novos contatos)
         //Spnnier E-mail
