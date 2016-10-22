@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +34,8 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
     private RepositorioContato repositorioContato;
 
+    private FiltrarDados filtrarDados;
+
 
     public static final String PARAMETRO_CONTATO = "contato";
 
@@ -55,11 +59,15 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
             repositorioContato = new RepositorioContato(conn);
 
-
+            //Adpatador que preenche o contatos no listView
             adaptadorContatos = repositorioContato.buscaContatos(this);
 
             //exibindo os contatos na listView associando o arrayAdapter(adaptadorContatos) no listView (listViewContatos)
             ListViewContatos.setAdapter(adaptadorContatos);
+
+            //Filtando os dados listados no listView
+            filtrarDados = new FiltrarDados(adaptadorContatos);
+            edtPesquisa.addTextChangedListener(filtrarDados);
 
 
         } catch (SQLException ex) {
@@ -68,6 +76,14 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
             MessagemBox.show(this, "Erro", "Erro ao criar o banco: " + ex.getMessage());
         }
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //fechando a conexão com o banco de dados
+        if (conn != null){
+            conn.close();
+        }
     }
 
     public void botaoAdicionar(View view) {
@@ -86,6 +102,10 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
         //Adapter (adaptadorContatos) responsavel por receber o objeto contato cadastrado no banco.
         adaptadorContatos = repositorioContato.buscaContatos(this);
+
+        //passando o método de filtrar os dados para o listView desta forma toda vez que
+        //onActivityResult for chamado será atualizado o filtra dados
+        filtrarDados.setArrayAdapter(adaptadorContatos);
 
         //exibindo os contatos na listView associando o arrayAdapter(adaptadorContatos) no listView (listViewContatos)
         ListViewContatos.setAdapter(adaptadorContatos);
@@ -108,4 +128,34 @@ public class actContato extends AppCompatActivity  implements View.OnClickListen
 
 
     }
+    // Método de filtro dos dados no listView
+    private class FiltrarDados implements TextWatcher{
+
+        private ArrayAdapter<Contato> arrayAdapter;
+
+        private FiltrarDados(ArrayAdapter<Contato> arrayAdapter){
+            this.arrayAdapter = arrayAdapter;
+        }
+
+        public void setArrayAdapter (ArrayAdapter<Contato> arrayAdapter){
+
+            this.arrayAdapter = arrayAdapter;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            //função de exibir o filtro da listView qndo é digitado alguma texto no EditText nome
+            arrayAdapter.getFilter().filter(charSequence);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }//fecha o método de filtro
 }

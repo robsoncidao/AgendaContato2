@@ -21,7 +21,8 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/edtPesquisa"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:hint="@string/lbl_nome" />
 
         <ImageButton
             android:layout_width="wrap_content"

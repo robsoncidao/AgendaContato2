@@ -129,6 +129,8 @@ public class ActCadContatos extends AppCompatActivity {
         edtDatasEspeciais.setOnClickListener(listener);
         //Tratando o focu do campo datas especiais
         edtDatasEspeciais.setOnFocusChangeListener(listener);
+        //desababilitando a opção de digitar no campo data, usando apenas o calendário
+        edtDatasEspeciais.setKeyListener(null);
 
         //Recuperando dados da Intent são os parâmetros passado do actContato
         Bundle bundle = getIntent().getExtras();
@@ -154,6 +156,15 @@ public class ActCadContatos extends AppCompatActivity {
             MessagemBox.show(this, "Erro", "Erro ao criar o banco: " + ex.getMessage());
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //fechando a conexão com o banco de dados
+        if (conn != null){
+            conn.close();
+        }
     }
 
     @Override

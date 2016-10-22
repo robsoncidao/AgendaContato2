@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.ArrayAdapter;
 
+import com.robson.appagenda.AdapterListViewContato;
+import com.robson.appagenda.R;
 import com.robson.appagenda.dominio.entidades.Contato;
 
 import java.util.Date;
@@ -58,9 +60,10 @@ public class RepositorioContato {
         conn.delete(Contato.TABELACONTATO, "_id = ?", new String[]{String.valueOf(id)});
     }
 
-    public ArrayAdapter<Contato> buscaContatos(Context context) {
+    public AdapterListViewContato buscaContatos(Context context) {
 
-        ArrayAdapter<Contato> adaptadorContatos = new ArrayAdapter<Contato>(context, android.R.layout.simple_list_item_1);
+
+        AdapterListViewContato adaptadorContatos = new AdapterListViewContato(context, R.layout.layout_lista_contato);
 
         Cursor cursor = conn.query(Contato.TABELACONTATO, null, null, null, null, null, null);
 
